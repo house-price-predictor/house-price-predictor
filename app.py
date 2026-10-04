@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-import pickle
+import joblib
 import numpy as np
 import pandas as pd
 import json
@@ -16,8 +16,7 @@ METADATA_PATH = os.path.join(BASE_DIR, "models", "metadata.json")
 
 model_load_error = None
 try:
-    with open(MODEL_PATH, "rb") as f:
-        model = pickle.load(f)
+    model = joblib.load(MODEL_PATH)
     with open(METADATA_PATH, "r") as f:
         metadata = json.load(f)
 except Exception as e:

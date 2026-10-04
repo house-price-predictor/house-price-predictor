@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import pickle
+import joblib
 import json
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -57,8 +57,7 @@ def main():
 
     # Save model
     os.makedirs('models', exist_ok=True)
-    with open('models/model.pkl', 'wb') as f:
-        pickle.dump(model, f)
+    joblib.dump(model, 'models/model.pkl')
 
     # Save metadata
     metadata = {
