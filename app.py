@@ -14,6 +14,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "models", "model.pkl")
 METADATA_PATH = os.path.join(BASE_DIR, "models", "metadata.json")
 
+model_load_error = None
 try:
     with open(MODEL_PATH, "rb") as f:
         model = pickle.load(f)
@@ -21,6 +22,7 @@ try:
         metadata = json.load(f)
 except Exception as e:
     print(f"Error loading model or metadata: {e}")
+    model_load_error = f"{type(e).__name__}: {str(e)}"
     model = None
     metadata = {}
 
@@ -68,7 +70,7 @@ def format_currency_npr(amount):
 def predict():
     try:
         if model is None:
-            return jsonify({"error": "Model not loaded"}), 500
+            return jsonify({"error": f"Model not loaded. Reason: {model_load_error}"}), 500
 
         # Whether it's an API request (JSON) or form submission
         if request.is_json:
