@@ -1,0 +1,20 @@
+{
+    "model_name": "Gradient Boosting Regressor",
+    "dataset_version": "v1.0 (Limbu-Unish/Real_State_Prediction)",
+    "features": [
+        "location",
+        "land_area_sqft",
+        "floors",
+        "bedrooms",
+        "bathrooms",
+        "rcc_structure",
+        "plumbing",
+        "electricity"
+    ],
+    "evaluation_metrics": {
+        "MAE": 323038.31,
+        "RMSE": 414674.17,
+        "R2": 0.9983
+    },
+    "training_record_count": 800
+}

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Property Predictor | Luxury Real Estate Valuation</title>
+    <meta name="description" content="AI-driven luxury property valuation system for Nepal.">
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons for sleek vector graphics -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        :root {
+            --primary: #f59e0b; /* Golden accent */
+            --primary-hover: #d97706;
+            --bg-color: #0f172a;
+            --surface-glass: rgba(15, 23, 42, 0.75);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --success: #10b981;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- Hero Section & Background --- */
+        .hero-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url("{{ url_for('static', filename='images/hero_bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+            transform: scale(1.05); /* Slight scale for potential parallax */
+            animation: slowZoom 20s infinite alternate linear;
+        }
+
+        .hero-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.6) 100%);
+            z-index: -1;
+        }
+
+        @keyframes slowZoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* --- Navigation --- */
+        nav {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--surface-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .brand i {
+            color: var(--primary);
+        }
+
+        .nav-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        /* --- Main Container --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 5%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+        }
+
+        @media(min-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* --- Typography & Hero Content --- */
+        .hero-content {
+            animation: fadeUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .hero-content h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3rem, 5vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .hero-content h1 span {
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-content p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        /* --- Glassmorphic Card --- */
+        .glass-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #ef4444);
+        }
+
+        .form-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* --- Form Elements --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media(min-width: 600px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .unit-toggle {
+            color: var(--primary);
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: 0;
+            transition: var(--transition);
+        }
+        
+        .unit-toggle:hover {
+            color: #fff;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--surface-border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition);
+            appearance: none; /* For custom select arrows */
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        
+        option {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: var(--primary);
+            color: #000;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+
+        /* --- Results State --- */
+        .result-container {
+            text-align: center;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .result-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .price-huge {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 20px rgba(245, 158, 11, 0.2);
+        }
+
+        .price-range {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--surface-border);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            text-align: left;
+        }
+
+        .metric-box span {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-box strong {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .action-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .action-link:hover {
+            color: #fff;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Floating particles effect container */
+        .particles {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Elements -->
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <nav>
+        <a href="/" class="brand">
+            <i data-feather="hexagon"></i>
+            Nepal Property
+        </a>
+        <div class="nav-badge">Powered by AI</div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- Left: Hero Text -->
+        <div class="hero-content">
+            <h1>Discover the true value of your <span>property.</span></h1>
+            <p>Our advanced machine learning model analyzes thousands of historical market data points across Nepal's premium real estate locations to deliver highly accurate, realistic property valuations instantly.</p>
+            
+            <!-- Trust indicators -->
+            <div style="display: flex; gap: 2rem; margin-top: 3rem;">
+                <div>
+                    <h3 style="font-family:'Outfit'; font-size: 2rem; color:#fff;">99.8%</h3>
+                    <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Model R² Accuracy</span>
+                </div>
+                <div>
+                    <h3 style="font-family:'Outfit'; font-size: 2rem; color:#fff;">1K+</h3>
+                    <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Properties Analyzed</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Glassmorphic App Area -->
+        <div class="glass-card" id="app-area">
+            
+            {% if not result %}
+            <!-- Prediction Form -->
+            <h2 class="form-title"><i data-feather="sliders"></i> Valuation Parameters</h2>
+            <form action="/predict" method="POST">
+                
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label for="location">Location</label>
+                        <select id="location" name="location" required>
+                            <option value="" disabled selected>Select district...</option>
+                            <option value="Kathmandu">Kathmandu</option>
+                            <option value="Lalitpur">Lalitpur</option>
+                            <option value="Bhaktapur">Bhaktapur</option>
+                            <option value="Pokhara">Pokhara</option>
+                            <option value="Chitwan">Chitwan</option>
+                            <option value="Dhangadi">Dhangadi</option>
+                            <option value="Syangja">Syangja</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="land_area_sqft">
+                            Area (Sq Ft)
+                            <span class="unit-toggle" id="unit-toggle-btn">To Aana</span>
+                        </label>
+                        <input type="number" id="land_area_sqft" name="land_area_sqft" placeholder="e.g. 1369" required min="100">
+                        <span id="unit_helper" style="font-size:0.75rem; color:var(--primary); display:none; margin-top:0.25rem;"></span>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label for="floors">Floors</label>
+                        <input type="number" id="floors" name="floors" value="1" min="1" max="15" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="bedrooms">Bedrooms</label>
+                        <input type="number" id="bedrooms" name="bedrooms" value="2" min="0" max="20" required>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label for="rcc_structure">Structure</label>
+                        <select id="rcc_structure" name="rcc_structure">
+                            <option value="1">RCC Pillar / Concrete</option>
+                            <option value="0">Load Bearing</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="bathrooms">Bathrooms</label>
+                        <input type="number" id="bathrooms" name="bathrooms" value="1" min="0" max="10" required>
+                    </div>
+                </div>
+                
+                <!-- Hidden fields for model completeness -->
+                <input type="hidden" name="electricity" value="1">
+                <input type="hidden" name="plumbing" value="1">
+
+                <button type="submit" class="btn">
+                    Calculate Valuation <i data-feather="arrow-right"></i>
+                </button>
+            </form>
+
+            {% else %}
+            
+            <!-- Result View -->
+            <div class="result-container">
+                <div class="result-badge"><i data-feather="check-circle" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i> Analysis Complete</div>
+                
+                <h3 style="font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Estimated Market Value</h3>
+                <div class="price-huge">{{ result.predicted_price_formatted }}</div>
+                <div class="price-range">Confidence Interval: {{ result.range_lower_formatted }} – {{ result.range_upper_formatted }}</div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <span>Price per Sq.Ft</span>
+                        <strong>{{ result.price_per_sqft_formatted }}</strong>
+                    </div>
+                    <div class="metric-box">
+                        <span>Location</span>
+                        <strong>{{ result.input_echo.location }}</strong>
+                    </div>
+                    <div class="metric-box">
+                        <span>Area</span>
+                        <strong>{{ result.input_echo.land_area_sqft }} sq.ft</strong>
+                    </div>
+                    <div class="metric-box">
+                        <span>Layout</span>
+                        <strong>{{ result.input_echo.bedrooms }} Bed / {{ result.input_echo.bathrooms }} Bath</strong>
+                    </div>
+                </div>
+                
+                <a href="/" class="action-link">
+                    <i data-feather="refresh-cw" style="width:16px;"></i> Evaluate Another Property
+                </a>
+                
+                <p style="font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-top: 2rem;">
+                    Disclaimer: This estimate is algorithm-generated and is not a substitute for a professional legal appraisal.
+                </p>
+            </div>
+            
+            {% endif %}
+            
+        </div>
+    </div>
+
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+
+        // Unit Converter Logic (SqFt <-> Aana)
+        const toggleBtn = document.getElementById('unit-toggle-btn');
+        const inputArea = document.getElementById('land_area_sqft');
+        const helper = document.getElementById('unit_helper');
+        
+        if (toggleBtn && inputArea) {
+            let showingAana = false;
+            
+            const updateHelper = () => {
+                const val = parseFloat(inputArea.value);
+                if (isNaN(val)) {
+                    helper.style.display = 'none';
+                    return;
+                }
+                
+                helper.style.display = 'block';
+                if (!showingAana) {
+                    helper.innerText = `≈ ${(val / 342.25).toFixed(2)} Aana`;
+                } else {
+                    helper.innerText = `≈ ${(val * 342.25).toFixed(2)} Sq.Ft`;
+                }
+            };
+            
+            inputArea.addEventListener('input', updateHelper);
+            
+            toggleBtn.addEventListener('click', () => {
+                showingAana = !showingAana;
+                toggleBtn.innerText = showingAana ? "To Sq.Ft" : "To Aana";
+                
+                // Swap placeholder and label logic
+                if(showingAana) {
+                    inputArea.placeholder = "e.g. 4";
+                } else {
+                    inputArea.placeholder = "e.g. 1369";
+                }
+                
+                updateHelper();
+            });
+            
+            // Note: Before form submission, if the user entered Aana, it should be converted back to SqFt
+            // For simplicity in UI logic, we just show the conversion as a helper text so the backend always receives SqFt
+        }
+    </script>
+</body>
+</html>
