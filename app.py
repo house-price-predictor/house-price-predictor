@@ -5,11 +5,14 @@ import pandas as pd
 import json
 import traceback
 
+import os
+
 app = Flask(__name__)
 
 # Load model and metadata at startup
-MODEL_PATH = "models/model.pkl"
-METADATA_PATH = "models/metadata.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "model.pkl")
+METADATA_PATH = os.path.join(BASE_DIR, "models", "metadata.json")
 
 try:
     with open(MODEL_PATH, "rb") as f:

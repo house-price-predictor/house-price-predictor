@@ -415,11 +415,11 @@
             <!-- Trust indicators -->
             <div style="display: flex; gap: 2rem; margin-top: 3rem;">
                 <div>
-                    <h3 style="font-family:'Outfit'; font-size: 2rem; color:#fff;">99.8%</h3>
+                    <h3 style="font-family:'Outfit'; font-size: 2rem; color:#fff;">{{ (metadata.evaluation_metrics.R2 * 100)|round(1) if metadata else '99.8' }}%</h3>
                     <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Model R² Accuracy</span>
                 </div>
                 <div>
-                    <h3 style="font-family:'Outfit'; font-size: 2rem; color:#fff;">1K+</h3>
+                    <h3 style="font-family:'Outfit'; font-size: 2rem; color:#fff;">{{ metadata.training_record_count if metadata else '1000' }}+</h3>
                     <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Properties Analyzed</span>
                 </div>
             </div>
